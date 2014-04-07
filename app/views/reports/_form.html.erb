@@ -1,0 +1,29 @@
+<%= simple_form_for(@report) do |f| %>
+  <%= f.error_notification %>
+<div class="container">
+  
+  <div class="col-lg-5 col-lg-offset-1">
+  <div class="form-inputs">
+    <select class="form-control">
+  <option>--Select Audit--</option>
+  <option>2</option>
+  <option>3</option>
+  <option>4</option>
+  <option>5</option>
+</select>
+    <%= f.input :report_name %>
+    <%= f.input :report_tag %>
+    <%= f.input :report_status %>
+  </div>
+    
+<label for="exampleInputFile">Upload report</label>
+    <input type="file" id="exampleInputFile">
+    <br/>
+    
+  <div class="form-actions">
+    <%= f.button :submit %>
+  </div>
+ 
+  </div> 
+</div>
+<% end %>

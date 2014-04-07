@@ -1,0 +1,190 @@
+<div class="container">
+<div class="row-fluid">
+<div class="col-lg-6">
+
+<div class="panel-group" id="accordion">
+  
+  <div class="panel panel-default">
+    
+    <div class="panel-heading">
+        
+       <strong> <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne"  style="font-family: 'Open Sans', sans-serif">
+          Describe audit finding
+        </a></strong>
+      
+    </div>
+    <div id="collapseOne" class="panel-collapse collapse in">
+      <div class="panel-body">
+        <div class="col-xs-12">
+        <%#= f.input :audit_id, collection: Audit.all, label_method: :department_name, label: false %>
+       
+        <%= f.input :description, :input_html=>{:rows=>10}, length: 12 %>
+        </div>
+         <br/>
+         <div class="col-xs-3">
+         <%= f.input :iso_clause %>
+         </div>
+      
+      </div>
+    </div>
+  </div>
+  
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      
+       <strong> <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo"  style="font-family: 'Open Sans', sans-serif">
+          Corrective and Preventive Action
+        </a></strong>
+      
+    </div>
+    <div id="collapseTwo" class="panel-collapse collapse">
+      <div class="panel-body">
+      <div class="col-xs-12">
+       <%= f.input :corrective_action, :input_html=>{:rows=>5} %>
+        <%= f.input :preventive_action, :input_html=>{:rows=>5} %>  
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="panel panel-default">
+    <div class="panel-heading">
+     
+       <strong> <a data-toggle="collapse" data-parent="#accordion" href="#collapseThree"  style="font-family: 'Open Sans', sans-serif">
+          More Information
+        </a></strong>
+     
+    </div>
+    
+    
+    <div id="collapseThree" class="panel-collapse collapse">
+      <div class="panel-body">
+      <div class="col-xs-12">
+        <%= f.input :category, collection: FindingType.all, label_method: :category_name, value_method: :category_name %>
+        <%= f.input :risk_rating, collection: Risk.all, label_method: :risk_name, value_method: :risk_name %>
+        <%= f.input :status_id, collection: FindingStatus.all, label_method: :status_name, value_method: :status_name %>
+        
+        <br/>
+        
+        <%= f.fields_for :document do |document_fields| %>
+        
+        <%= document_fields.input :attachment, as: :file %>
+        
+        <% end %>
+        
+        </div>
+      </div>
+    </div>
+     
+  </div>
+</div>
+    <br/>
+   
+     <%= f.button :submit, class: "btn btn-success btn-lg btn-block" %>
+         
+     
+</div>
+</div>
+</div>
+
+
+
+
+background: url(<%= asset_path 'grain2.jpg' %>) no-repeat fixed center;
+
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Profile name:</b>
+ <%= @audit.user.profile_name %>
+</p>
+
+<p>
+  <b>Department name:</b>
+  <%= @audit.department_name %>
+</p>
+
+<p>
+  <b>Auditee name:</b>
+  <%= @audit.auditee_name %>
+</p>
+
+<p>
+  <b>Auditee email:</b>
+  <%= @audit.auditee_email %>
+</p>
+
+<p>
+  <b>Auditor name:</b>
+  <%= @audit.auditor_name %>
+</p>
+
+<p>
+  <b>Auditor email:</b>
+  <%= @audit.auditor_email %>
+</p>
+
+<p>
+  <b>Start date:</b>
+  <%= @audit.start_date %>
+</p>
+
+<p>
+  <b>End date:</b>
+  <%= @audit.end_date %>
+</p>
+
+
+    <td><%= finding.corrective_action %></td>
+    <td><%= finding.preventive_action %></td>
+    
+     <ul>
+      <% @audit.errors.full_messages.each do |msg| %>
+     
+        <li><%= msg %></li>
+   
+      <% end %>
+      </ul>
+    
+ @audits= Audit.paginate(:page => params[:page], :per_page => 3).order('id DESC')
+ 
+ 
+    
+    <div class="container">
+    <div class="row-fluid"> 
+    <div class="col-lg-12">
+    <%= will_paginate @audits %>
+    </div>
+    </div>
+    </div>
+    
+    <h2>Edit <%= resource_name.to_s.humanize %></h2>
+   
+   
+   
+   
+
+<table>
+  <tr>
+    <th>Report name</th>
+    <th>Report tag</th>
+    <th>Report status</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @reports.each do |report| %>
+  <tr>
+    <td><%= report.report_name %></td>
+    <td><%= report.report_tag %></td>
+    <td></td>
+    <td><%= link_to 'Show', report %></td>
+    <td><%= link_to 'Edit', edit_report_path(report) %></td>
+    <td><%= link_to 'Destroy', report, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Report', new_report_path %>

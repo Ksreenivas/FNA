@@ -1,0 +1,157 @@
+<%# @documents = @finding.documents.build %>
+<%= simple_form_for(@finding, html: {class: "form-horizontal", multipart: true}) do |f| %>
+<%= f.error_notification %>
+<% if @finding.errors.any? %>
+    <div class="container" id="error_explanation">
+    <div class="row-fluid">
+    <div class="col-lg-5 col-lg-offset-3">
+    <div class="well well-sm">
+      <p><%= pluralize(@finding.errors.count, "error") %> prohibited this audit from being saved</p>
+      <% @finding.errors.full_messages.each do |msg| %>
+        <p><%= msg %></p>
+      <% end %>
+    </div>
+     
+    </div>
+    </div>
+    </div>
+  <% end %>
+ 
+  
+<div class="container">
+<div class="col-lg-5">
+<ul class="nav nav-tabs">
+  <li><a href="#home" data-toggle="tab">Audit finding</a></li>
+  <li><a href="#profile" data-toggle="tab">CAPA</a></li>
+  <li><a href="#settings" data-toggle="tab">Evidence</a></li>
+  <li><%= f.button :submit, class: "btn btn-success pull-right" %></li>
+</ul>
+
+<!-- Tab panes -->
+<div class="tab-content">
+   <div class="tab-pane active" id="home">
+    
+    
+    <br/>
+    
+    <div class="form-group">
+     <div class="col-xs-12">
+     
+    
+      <%#= f.input :audit_id, collection: Audit.all, label_method: :department_name, label: false %>
+        
+       <%= f.hidden_field :audit_id, :value => params[:audit_id].to_i %>
+      <%= f.input :description, :input_html=>{:rows=>10}, length: 12, :autofocus => true %>
+    
+      
+     </div>
+      </div>
+      
+     <div class="form-group">
+      <div class="col-xs-6">
+      <div class="input-sm">
+      <%= f.input :category, collection: FindingType.all, label_method: :category_name, value_method: :category_name %>
+      </div>
+      </div>
+      
+      <div class="col-xs-6">
+      <div class="input-sm">
+      <%= f.input :risk_rating, collection: Risk.all, label_method: :risk_name, value_method: :risk_name %>
+      </div>
+     
+      </div>
+      
+      </div>
+   
+      <br/>
+     
+      <div class="form-group">
+      <div class="col-xs-9">
+      <div class="input-sm">
+      <%= f.input :status_id, collection: FindingStatus.all, label_method: :status_name, value_method: :status_name %>
+      </div>
+      </div>
+      
+      <div class="col-xs-3">
+      <div class="input-sm">
+      <%= f.input :iso_clause, :label => "Reference" %>
+      </div>
+      </div>
+      </div>
+      
+      
+</div>
+      
+   <div class="tab-pane" id="profile">
+  
+  <br/>
+    
+    <div class="form-input">
+    <div class="col-xs-12">
+    
+     <%= f.input :corrective_action, :input_html=>{:rows=>6} %>
+     <%= f.input :preventive_action, :input_html=>{:rows=>6} %>
+      
+    </div>
+    </div>
+  
+  </div>
+  <div class="tab-pane" id="settings">
+    <br/>
+  
+   <!--  <div class="form-input">
+      <div class="col-xs-12">
+      <div class="input-sm">
+    <%#= f.fields_for :document do |document_fields| %>
+        
+      <%#= document_fields.file_field :attachment,name:"attachment", id:"attachment",onchange:"document.getElementById('moreUploadsLink').style.display = 'block';"%>
+    
+    <%# end %>
+    
+    <ul class= "nav">
+    <li><a href="#"> File 1 </a></li>
+    <li><a href="#"> File 2 </a></li>
+    <li><a href="#"> File 3 </a></li>
+    </ul> -->
+  <% number = 0 %>
+    
+<%= file_field_tag :attachment,name:"attachment", id:"attachment",onchange:"document.getElementById('moreUploadsLink').style.display = 'block';"%>
+<div id="moreUploads"></div>
+<div id="moreUploadsLink" style="display:none;"><a href="javascript:addFileInput();">Attach another File</a></div>
+ 
+<script type="text/javascript">
+var upload_number = 2;
+function addFileInput() {
+ 	var d = document.createElement("div");
+ 	var file = document.createElement("input");
+ 	file.setAttribute("type", "file");
+ 	file.setAttribute("name", "attachment"+upload_number);
+ 	d.appendChild(file);
+ 	document.getElementById("moreUploads").appendChild(d);
+ 	upload_number++;
+}
+</script>
+
+
+  <%#= f.submit %>
+   
+
+
+  <%#= f.file_field :avatar %>
+      
+     </div>
+    </div>
+    </div>
+      
+      
+      
+  </div>
+</div>
+
+
+</div> 
+</div>
+
+        
+      
+<% end %>

@@ -1,0 +1,148 @@
+<%# @documents = @finding.documents.build %>
+<%= simple_form_for(@finding, html: {class: "form-horizontal", multipart: true}) do |f| %>
+<%= f.error_notification %>
+<% if @finding.errors.any? %>
+    <div class="container" id="error_explanation">
+    <div class="row-fluid">
+    <div class="col-lg-5 col-lg-offset-3">
+    <div class="well well-sm">
+      <p><%= pluralize(@finding.errors.count, "error") %> prohibited this audit from being saved</p>
+      <% @finding.errors.full_messages.each do |msg| %>
+        <p><%= msg %></p>
+      <% end %>
+    </div>
+     
+    </div>
+    </div>
+    </div>
+  <% end %>
+ 
+  
+<div class="container">
+<div class="col-lg-5 col-lg-offset-1">
+<ul class="nav nav-tabs">
+  <li class="active"><a href="#home" data-toggle="tab">Audit finding</a></li>
+  <li><a href="#profile" data-toggle="tab">CAPA</a></li>
+  <li><a href="#settings" data-toggle="tab">Evidence</a></li>
+  <li class="pull-right"><%= f.button :submit, 'Submit', class: "btn btn-success btn-sm" %></li>
+</ul>
+
+<!-- Tab panes -->
+<div class="tab-content">
+   <div class="tab-pane active" id="home">
+    
+    
+    <br/>
+    
+       <div class="form-inputs">
+       <div class="input-sm">
+       <div class="col-lg-12">
+       <%#= f.input :audit_id, collection: Audit.all, label_method: :department_name, label: false %>
+        
+       <%= hidden_field_tag :audit_id,  params[:audit_id]  %>
+       <%= f.input :description, :input_html=>{:rows=>10}, length: 12, :autofocus => true %>
+       <!--<textarea name="content" data-provide="markdown" rows="10"></textarea>-->
+       </div>
+         </div>
+        </div>
+     <br/><br/> <br/><br/> <br/><br/> <br/><br/> <br/><br/> <br/><br/>
+      <div class="form-inputs">     
+      <div class="input-sm">
+       <div class="col-lg-12">
+      <%= f.input :category, collection: FindingType.all, label_method: :category_name, value_method: :category_name %>
+        </div>
+        </div>
+        <br/><br/>
+        <div class="input-sm">
+           <div class="col-lg-12">
+      <%= f.input :risk_rating, collection: Risk.all, label_method: :risk_name, value_method: :risk_name %>
+          </div>
+      </div>
+       <br/><br/>
+     
+      <div class="input-sm">
+         <div class="col-lg-12">
+      <%= f.input :status_id, collection: FindingStatus.all, label_method: :status_name, value_method: :status_name %>
+        </div>
+      </div>
+      <br/><br/>
+      <div class="input-sm">
+         <div class="col-lg-12">
+      <%= f.input :iso_clause, :label => "Reference", placeholder: 'Reference to ISO or any other clause '%>
+      </div>
+        </div>
+      </div>
+     
+      
+   
+  </div>
+      
+   <div class="tab-pane" id="profile">
+  
+  <br/>
+    
+    <div class="form-inputs">
+   
+   <div class="input-sm">
+      <div class="col-lg-12">
+      <%= f.input :corrective_action, :input_html=>{:rows=>10}, length: 12, :autofocus => true, :label => "Enter corrective and preventive action" %>
+     
+     <!--<%#= f.input :preventive_action, :input_html=>{:rows=>6} %>-->
+      </div>
+    </div>
+      <br/><br/> <br/><br/> <br/><br/> <br/><br/> <br/><br/> <br/><br/><br/>
+      <div class="well">
+      <div class="input-sm">
+         <div class="col-lg-12">
+      <%= f.label :closure_date , "Closure Date" %><br/>
+           <%= f.datetime_select(:closure_date,default: 7.days.from_now)  %>
+      </div>
+      </div>
+       
+    </div>
+     </div>
+  
+  </div>
+  <div class="tab-pane" id="settings">
+    <br/>
+   
+  
+    <table class='table' id='list-table'>
+      <%= f.fields_for :documents do |document| %>
+        <tr id='document-<%=document.object.id%>'>
+          <td style='width: 83px;'>
+            <%= document.hidden_field :id %>
+            <div class='form-group' style='text-align: center;padding-right:50px'>
+              <img src='<%= document.object.attachment ? document.object.attachment : '/assets/default.png' %>' width='140' height='100' />
+              <%= link_to 'Choose File', 'javascript:void(0)', class: 'change-file-list btn btn-mini' %>
+              <%= document.file_field :attachment, class: 'hidden file-input-list' %>
+            </div>
+          </td>
+          <td style='vertical-align: middle;' >
+            <div class='form-group'>
+              <a href='javascript:void(0)' class='remove-list'>Remove</a>
+            </div>
+         </td> 
+      </tr>
+    <%end%>
+    </table>
+
+    <div class="form-group">
+      <%= link_to 'Add Files', 'javascript:void(0)', class: 'add-list' %>
+    </div>
+     </div>
+    </div>
+    </div>
+      
+      
+      
+  </div>
+</div>
+
+
+</div> 
+</div>
+
+        
+      
+<% end %>

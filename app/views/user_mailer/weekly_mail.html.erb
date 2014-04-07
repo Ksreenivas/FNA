@@ -1,0 +1,42 @@
+<h3>
+  Dear <%= @user.profile_name %> </h3>
+<div>
+   Here are the details of audit action happening in your sreenivas account.
+</div> 
+<% if @audits == [] %>  
+  <div><b>"There were no audits scheduled in last week" </b></div>
+<%else%>
+  <div><b>Number of audits:</b> <%= audits.count %></div>
+  <div><b>Number of findings:</b> <%= @findings.count %></div>
+  <div><b>Capa Pending For:</b> <%= @capa_pending_findigs.count %></div>
+  <div><b>Open Audits:</b> <%= @capa_pending_findigs.count %></div>
+  <div><b>Upcoming Audits for next week:</b></div>
+<%end%>
+<% if @upcoming_audits != [] %>  
+  <table>
+    <tr>
+      <th>Audit Id</th>
+      <th>Department Name</th>
+      <th>Location</th>
+      <th>Auditee</th>
+      <th>Auditor</th>
+      <th>Starts on </th>
+    </tr>
+    <% @upcoming_audits.each do |audit|%>
+    <tr>
+      <td><%= audit.id %></td>
+      <td><%= audit.department_name %></td>
+      <td><%= audit.location %></td>
+      <td><%= audit.auditee_name %></td>
+      <td><%= audit.auditor_name %></td>
+      <td><%= audit.start_date.strftime("%d-%m-%y") %></td>
+     </tr>
+   <%end%> 
+    </table>
+  <%else %>
+    <div><b>"There are no audits scheduled in this week" </b></div>
+  <%end%>
+<div>  
+  <p>From,</p>
+  <p>77 sreenivas</p>
+ </div> 

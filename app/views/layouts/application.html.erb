@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Audit management software, paperless audits, collaborative audits for auditors</title>
+  <%= stylesheet_link_tag    "application", :media => "all" %>
+  
+  
+  <link href='https://fonts.googleapis.com/css?family=Lato:900' rel='stylesheet' type='text/css'>
+  <link href='http://fonts.googleapis.com/css?family=Muli' rel='stylesheet' type='text/css'>
+  <link href='http://fonts.googleapis.com/css?family=Open+Sans:700' rel='stylesheet' type='text/css'>
+  <link href='http://fonts.googleapis.com/css?family=Montserrat:700' rel='stylesheet' type='text/css'>
+  
+  <%= javascript_include_tag "application" %>
+  
+  <%= csrf_meta_tags %>
+  
+</head>
+
+<style>
+    
+  .badge-success {
+  background-color: #e74c3c;
+  
+}
+  
+</style>
+
+<body style="padding-top:70px; font-family: 'Arial', sans-serif;">
+
+
+  <nav class="navbar navbar-default navbar-fixed-top" role="navigation" style="background:#ffffff">
+  <!-- Brand and toggle get grouped for better mobile display -->
+  
+  <div class="navbar-header">
+    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+      <span class="sr-only">Toggle navigation</span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </button>
+    <span class="navbar-brand" href="#" style="font-family: 'Montserrat', sans-serif;"> <span class="badge badge-success"><strong>sreenivas </strong></span><small> beta</small></span>
+  </div>
+
+  <!-- Collect the nav links, forms, and other content for toggling -->
+  <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+    <ul class="nav navbar-nav" style="font-family: 'Open Sans', sans-serif; color:#ffffff; margin-left:50px;">
+     <li><%= link_to ' Audits', audits_path %></li>
+     <li><%= link_to ' Reports', reports_path %></li>
+     <li><%= link_to ' Stats', dashboards_path %></li>
+    
+    </ul>
+    
+      
+     <ul class="nav navbar-nav navbar-right">
+       <% if user_signed_in? %>
+     
+       <li><%= link_to (image_tag(current_user.gravatar_url, :size => "20x20")), edit_user_registration_path %></li> 
+       <li><%= link_to "Sign out", destroy_user_session_path, method: :delete %></li>
+       
+       <% else %>
+        <li><%= link_to "Register", new_user_registration_path %></li>
+        <li><%= link_to "Login", new_user_session_path %></li>
+        <% end %>
+        </ul>
+    
+      
+      <div class="navbar-form navbar-right" role="search">
+        
+      <%= form_tag({:controller => 'search', :action => 'index'}, {:method => 'get'})  do |s| %>
+        
+      <div class="form-group">
+        <div class="btn-group">
+          <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">
+          Search by <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu" role="menu">
+          <li><a href="#">Audits</a></li>
+        <li><a href="#">Findings</a></li>
+        <li><a href="#">Reports</a></li>
+    
+        </ul>
+        </div>
+        <%= text_field_tag :search, params[:search], style: "width:200px; margin-top:5px", placeholder: "Jump to audits or findings", class: "input-sm" %>
+        <%= submit_tag "Search", class: "btn btn-sm" %>
+      </div>  
+    <% end %>
+    </div>
+      
+  </div><!-- /.navbar-collapse -->
+</nav>
+
+<div class="container">
+
+<% if flash[:notice] %>
+
+<div class="alert alert-success alert-dismissable">
+  <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+  <%= flash[:notice] %>
+</div>
+
+
+<% end %>
+
+<% if flash[:alert] %>
+
+<div class="alert alert-warning alert-dismissable">
+  <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+  <%= flash[:alert] %>
+</div>
+
+
+<% end %>
+
+</div>
+<br/>
+<br/>
+<%= yield %>
+
+
+
+
+
+</body>
+</html>

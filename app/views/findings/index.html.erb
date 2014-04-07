@@ -1,0 +1,43 @@
+
+
+<div class="container">
+    <div class="row-fluid"> 
+    <div class="col-lg-12">
+    <%= will_paginate @findings %>
+    </div>
+    </div>
+    </div>
+
+<% @findings.each do |finding| %>
+
+<div class="container">
+<div class="row-fluid">
+<div class="col-lg-8">
+<small>
+<div class="panel panel-default">
+  <div class="panel-heading"><span class="label label-info">Finding # <%= finding.id %></span> | <%= finding.audit.department_name %> <span class="label label-info pull-right">
+  <%= finding.status_id %></span> </div>
+  <div class="panel-body">
+    <%= finding.description %>
+  </div>
+  <div class="panel-footer"><%= link_to time_ago_in_words(finding.created_at) + " ago" , finding %>  | 
+  <span class="label label-warning"><%= finding.category %></span>
+  | <span class="label label-primary"> <%= finding.risk_rating + " risk" %> </span>
+      
+     <span class="pull-right">
+      <%= link_to 'Edit', edit_finding_path(finding) %> |
+      <%= link_to 'Destroy', finding, method: :delete, data: { confirm: 'Are you sure?' } %>
+      </span>
+  </div>
+</div>
+</small>
+
+</div>
+  
+</div>
+ 
+</div>
+<% end %>
+
+
+

@@ -1,0 +1,162 @@
+ <div class="container">
+   <span class="label label-danger">Matching Results for Audits</span>
+   
+    <div class="row-fluid"> 
+    <div class="col-lg-12">
+    <%= will_paginate @audits %>
+    </div>
+    </div>
+    </div>
+ <br/>
+  <% if  @audits == [] %>
+  <div class="container">
+   
+  <div class="panel-heading">Search result yielded zero audits </div>
+  
+</div>
+  <%else %>
+    <% @audits.each do |audit| %>
+     <div class="container">
+     <div class="row-fluid">
+     <div class="col-lg-7 col-lg-offset-1">
+       
+      <small>
+        <div class="panel panel-default">
+        <% audit.findings.each do |finding| %>  
+          <%if finding.status_id != "Closed"%>
+            <% break %>
+          <%end %>  
+        <% end  %>
+        <%#= (audit.start_date..audit.end_date).cover?(Time.now)%>
+        
+        <div class="panel-heading">
+        <span class="label label-default">Audit # <%= audit.id %></span> | <strong><%= audit.department_name %></strong>
+            <span class="label label-info pull-right">
+  
+            <%if (audit.start_date.to_i..audit.end_date.to_i).include?(Time.now.to_i) %>
+            
+              <%= "In Progress" %> 
+              <%elsif audit.start_date.to_i > Time.now.to_i %>
+                <%= "Not Started"%>
+              <%elsif Time.now.to_i > audit.end_date.to_i   %>  
+                <%= "Audit Completed" %>
+            <%end%> 
+           </span>
+        </div>
+       
+        <div class="panel-body">
+          <strong>Auditor: </strong> <%= audit.auditor_name %> | <strong>Auditee: </strong><%= audit.auditee_name %>
+        </div>
+  
+              <div class="panel-footer">  
+                      <div class="meta">
+                     <p>
+                     <%= time_ago_in_words(audit.created_at) + " ago" %>    |
+                      <%= link_to " Modify", edit_audit_path(audit) %>  |  
+         
+                     <i class="fa fa-trash-o fa-lg"></i> <%= link_to " Delete", audit, method: :delete, data: { Confirm: "Are you sure"} %> |
+                      <%= link_to " View Finding", audit, class: "btn btn-info btn-xs" %>
+                      <i class="fa fa-share-square-o fa-lg"></i>
+                       </p>
+                       </div>
+                       </div>
+                 </div> 
+          </div>
+      </small>
+   </div>
+   </div>
+   </div>
+      <% end %>
+    <%end%>     
+
+ </div> 
+
+<div class="container">
+   <span class="label label-warning"> Matching results for Findings</span>
+   
+    <div class="row-fluid"> 
+    <div class="col-lg-12 col-lg-offset-1">
+    <%= will_paginate @findings %>
+    </div>
+    </div>
+    </div>
+ <br/>
+  <% if  @findings == [] %>
+      <div class="container">
+   <%#= @findings.inspect%>
+  <div class="panel-heading">Search result yielded zero findings </div>
+  
+</div>
+  <%else %>
+   <% @findings.each do |finding| %>
+    <div class="container">
+    <div class="row-fluid">
+    <div class="col-lg-7 col-lg-offset-1">
+        
+    <small>
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <span class="label label-success"> Finding # <%= finding.id %></span> | <%= finding.audit.department_name if finding.audit %> 
+          <% if finding.status_id == "CAPA Pending"  %>
+            <span class="label label-warning pull-right "> <%= finding.status_id %>  </span>
+          <%elsif finding.status_id == "CAPA Submitted" %>    
+            <span class="label label-success pull-right"> <%= finding.status_id %> </span>
+          <%elsif finding.risk_rating == "Closed" %>       
+            <span class="label label-info pull-right"> <%= finding.status_id %> </span>
+          <%else %>        
+            <span class="label label-primary pull-right"> <%= finding.status_id %> </span>
+          <%end%>  
+        </div>
+        
+        <div class="panel-body">
+          <%= finding.description %>
+        </div>
+        
+        <div class="panel-footer">
+          <%= link_to time_ago_in_words(finding.created_at) + " ago" , finding %>  | 
+          <span class="label label-warning"><%= finding.category %></span>         |
+          
+          <% if finding.risk_rating == "Critical"  %>
+          <span class="label label-danger "> 
+            <%= finding.risk_rating + " risk" %>
+          </span>
+          <%elsif finding.risk_rating == "High" %>    
+          <span class="label label-warning"> 
+            <%= finding.risk_rating + " risk" %>
+          </span>
+          <%elsif finding.risk_rating == "Medium" %>    
+          <span class="label label-primary "> 
+            <%= finding.risk_rating + " risk" %>
+          </span>
+          <%elsif finding.risk_rating == "Low" %>        
+          <span class="label label-info "> 
+            <%= finding.risk_rating + " risk" %>
+          </span>
+          <%elsif finding.risk_rating == "No Risk" %>        
+          <span class="label label-default "> 
+            <%= finding.risk_rating + " risk" %>
+          </span>
+          <%else %>        
+          
+          <span class="label label-primary "> 
+            <%= finding.risk_rating + " risk" %>
+          </span>
+          <%end%>    
+          
+          
+          <span class="pull-right">
+            <%= link_to 'Edit', edit_finding_path(finding) %> |
+            <%= link_to 'Destroy', finding, method: :delete, data: { confirm: 'This action is permanent, are you sure?' } %>
+          </span>
+          
+        </div>  
+        
+      </div>
+    </small>
+      </div> 
+      </div> 
+      </div> 
+      <%end%>
+    <% end %> 
+
+

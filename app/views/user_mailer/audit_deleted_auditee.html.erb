@@ -1,0 +1,14 @@
+<h3>
+  Dear <%= @audit.auditee_name %> </h3>
+<br/><br/><br/>
+<div>
+    The <%= @audit.department_name %> audit to be conducted on <%= @audit.start_date.strftime("%Y-%m-%d") %> at <%= @audit.start_date.strftime("%H:%M")%> is cancelled.
+    
+</div> 
+<br/>
+<br/><br/>   
+<div>  
+  <p>Thanks,</p>
+  <p><%= @user.profile_name%></p>
+  <p><%= @user.email%></p>
+</div> 

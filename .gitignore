@@ -1,0 +1,8 @@
+install.log
+database.yml
+development.log
+log/
+test/
+tmp/
+*.lock
+public/system

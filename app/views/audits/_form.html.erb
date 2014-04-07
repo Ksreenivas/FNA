@@ -1,0 +1,260 @@
+<%= simple_form_for(@audit, html: {class: "form-horizontal"}) do |f| %>
+  <% if @audit.errors.any? %>
+    <div class="container" id="error_explanation">
+    <div class="row-fluid">
+    <div class="col-lg-5 col-lg-offset-3">
+    <div class="well well-sm">
+      <p><%= pluralize(@audit.errors.count, "error") %> prohibited this audit from being saved</p>
+      <% @audit.errors.full_messages.each do |msg| %>
+        <p><%= msg %></p>
+      <% end %>
+    </div>
+     
+    </div>
+    </div>
+    </div>
+  <% end %>
+
+
+<div class="container">
+  <div class="col-lg-5 col-lg-offset-1">
+<div class="alert alert-warning fade in">
+    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+      <strong>Need your attention!</strong> The below form requires few information about your client and team in order to generate an audit.
+    </div>
+  </div>
+</div>
+<br/>
+<div class="container">
+  <div class="col-lg-5 col-md-5 col-lg-offset-1">
+<ul class="nav nav-tabs">
+  <li class="active"><a href="#organization" data-toggle="tab">Client</a></li>
+  <li><a href="#client" data-toggle="tab">Auditee</a></li>
+  <li><a href="#team" data-toggle="tab">Auditor</a></li>
+  <li class="pull-right"><%= f.button :submit , 'Submit',  class: "btn btn-success btn-sm" %></li>
+</ul>
+
+<!-- Tab panes -->
+<div class="tab-content">
+  <div class="tab-pane active" id="organization">
+    <br/>
+   <form class="form-horizontal" role="form">
+     <div class="form-group">
+         <div class="col-sm-12">
+      <input class="form-control" placeholder="Organization name">
+    </div>
+  </div>
+     
+     <div class="form-group">
+         <div class="col-sm-12">
+      <input class="form-control" placeholder="Address">
+    </div>
+  </div>
+       <div class="form-group">
+         <div class="col-sm-12">
+      <input class="form-control" placeholder="Contact number">
+    </div>
+  </div>
+     
+       <div class="form-group">
+         <div class="col-sm-12">
+      <input class="form-control" placeholder="MR name">
+    </div>
+  </div>
+     
+       <div class="form-group">
+         <div class="col-sm-12">
+      <input class="form-control" placeholder="MR Email">
+    </div>
+  </div>
+     
+   </form>
+  
+  </div>
+  
+  
+  <div class="tab-pane" id="client">
+    <div class="form-inputs">
+      <div class="input-sm">
+        <div class="col-lg-12">
+      <%= f.input :department_name, placeholder: 'The department name to be audited' %>
+      </div>
+      </div>
+      <br/><br/>
+      <div class="input-sm">
+        <div class="col-lg-12">
+      <%= f.input :auditee_name, placeholder: 'Type auditee\'s name' %>
+      </div>
+      </div>
+      <br/><br/>
+      <div class="input-sm">
+        <div class="col-lg-12">
+      <%= f.input :auditee_email, placeholder: 'awesomeauditee@domain.com' %>
+      </div>
+      </div>
+      <br/><br/>
+       <div class="input-sm">
+         <div class="col-lg-12">
+       <%= f.input :location %>
+       </div>
+      </div>
+       <br/><br/>     <br/><br/>
+      <div class="well">
+       <div class="input-sm">
+     <div class="col-lg-12">
+       <%= f.label :start_date , "Start Date" %>
+        
+       <%= f.datetime_select(:start_date, :default => { :hour => 23, :minute => 59 }) %>
+       </div>
+        </div>
+      
+       <div class="input-sm">
+        <div class="col-lg-12">
+       <%= f.label :end_date , "End Date" %>
+       <%= f.datetime_select(:end_date, :default => { :hour => 23, :minute => 59 }) %>
+       </div>
+        </div>
+      </div>    
+    </div>
+    
+ <!--<div class="container">
+    <div class="col-md-10">
+        <div class='well'>
+            <div class="form-group">
+                <div class='input-group date' id='datetimepicker1'>
+                    <input type='text' class="form-control" />
+                    <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div> 
+            </div>
+        </div> 
+        <script type="text/javascript">
+            $(function () {
+              //  alert("this is working");
+                $('#datetimepicker1').datetimepicker();
+            });
+        </script>
+    </div>
+</div> -->
+    
+  </div> 
+ 
+  
+  <div class="tab-pane" id="team">
+    <div class="form-inputs">
+      <div class="input-sm">
+          <div class="col-lg-12">
+      <%= f.input :auditor_name, placeholder: 'Auditor\'s name' %>
+      </div>
+      </div>
+       <br/><br/>
+        <div class="input-sm">
+            <div class="col-lg-12">
+       <%= f.input :auditor_email, placeholder: 'awesomeauditor@domain.com' %>
+       <!-- <label class="badge pull-right" data-toggle="modal" data-target="#myModal">
+        Add auditor </label> -->
+        </div>
+      </div>
+      <br/><br/>
+     <div class="input-sm">
+         <div class="col-lg-12">
+      <%= f.input :secondry_auditor_name, placeholder: 'Type secondry auditor\'s name' %>
+      </div>
+      </div>
+      <br/><br/>
+      <div class="input-sm">
+          <div class="col-lg-12">
+      <%= f.input :secondry_auditor_email, placeholder: 'awesomeauditor@domain.com' %>
+      </div>
+      </div>
+       <br/><br/>                    
+       <div class="input-sm">
+           <div class="col-lg-12">
+       <%= f.input :audit_type, placeholder: 'ISO, Process, Statutory, Supplier' %>
+       </div>
+      </div>
+    </div>
+    
+  </div>
+
+</div>
+
+</div>
+</div>
+
+                              
+                              
+                                 
+    <!-- teting code for date and time picker will fix it later -->
+    
+    
+<!--    <div class="input-append date" id="datetimepicker1  " data-date="05-06-2013" data-date-format="dd-mm-yyyy">-->
+<!--    <input class="span2" size="16" type="text" readonly="readonly" />-->
+<!--    <span class="add-on"><i class="icon-calendar"></i></span>-->
+<!--</div>-->
+<!--                            <div class="container">-->
+<!--    <div class="col-md-10">-->
+<!--        <div class='well'>-->
+<!--            <div class="form-group">-->
+<!--                <div class='input-group date' >-->
+<!--                    <input type='text' class="form-control" />-->
+<!--                    <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span>-->
+<!--                    </span>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--        <script type="text/javascript">-->
+<!--            $(function () {-->
+<!--                $('#datetimepicker1').datetimepicker();-->
+<!--            });-->
+<!--        </script>-->
+<!--    </div>-->
+<!--</div>-->
+   
+   
+<!--   <div class="well">-->
+<!--  <div id="datetimepicker1" class="input-append date">-->
+<!--    <input data-format="dd/MM/yyyy hh:mm:ss" type="text"></input>-->
+<!--    <span class="add-on">-->
+<!--      <i data-time-icon="icon-time" data-date-icon="icon-calendar">-->
+<!--      </i>-->
+<!--    </span>-->
+<!--  </div>-->
+<!--</div>-->
+<!--<script type="text/javascript">-->
+<!--  $(function() {-->
+<!--    $('#datetimepicker1').datetimepicker({-->
+<!--      language: 'pt-BR'-->
+<!--    });-->
+<!--  });-->
+<!--</script>-->
+   
+  
+        
+        <!--<link type="text/css" href="../assets/bootstrap.css" />-->
+        <!--<link type="text/css" href="../assets/bootstrap-datetimepicker.css" />-->
+        <!--<script src="https://code.jquery.com/jquery-1.10.1.min.js"></script>-->
+        <!--<script type="text/javascript" src="../assets/bootstrap.js"></script>-->
+        <!--<script type="text/javascript" src="../assets/bootstrap-datetimepicker.js"></script>-->
+  
+  
+        <!--<div class="input-append bootstrap-datetimepicker">-->
+        <!--    <input id="datetimepicker1" type="text" class="input-small">-->
+        <!--    <span class="add-on"><i class="icon-time"></i></span>-->
+        <!--</div>-->
+
+        <!--<script type="text/javascript">-->
+        <!--    $('#datetimepicker1').datetimepicker();-->
+        <!--</script>-->
+        
+                               
+        
+<!-- ENDS HERE -->
+     
+
+      
+ 
+<% end %>
+
+   
+

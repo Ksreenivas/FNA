@@ -1,0 +1,82 @@
+<style>
+
+
+.panel-default {
+opacity: 0.9;
+margin-top:15px;
+
+}
+.form-group.last { margin-bottom:0px; }
+
+ .badge-success {
+  background-color: #e74c3c; }
+  
+  .media-heading {
+   font-family: 'Open Sans', sans-serif;
+   color: #2c3e50; }
+
+
+  
+</style>
+<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+  <!-- Brand and toggle get grouped for better mobile display -->
+  
+  <div class="navbar-header">
+    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+      <span class="sr-only">Home</span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </button>
+    <div class="container">
+      <h2 class="col-lg-offset-6" href="#" style="font-family: 'Montserrat', sans-serif; color: #e74c3c">sreenivas</h2>
+    
+   </div>
+   
+  </div>
+</nav>
+
+<%= simple_form_for(resource, :as => resource_name, :url => registration_path(resource_name), :html => { :method => :put }) do |f| %>
+  <%= devise_error_messages! %>
+<div class="container">
+  <div class="col-lg-4 col-md-4 col-lg-offset-4">
+  <div class="panel panel-default">
+  <div class="panel-heading">Modify Profile</div>
+  <div class="panel-body">
+     <div><%= f.label :profile_name %><br />
+  <%= f.email_field :profile_name, :autofocus => true %></div>
+  <div><%= f.label :email %><br />
+    <%= f.email_field :email,:disabled => true %></div>
+    <div><%= f.label :Phone %><br />
+    <%= f.email_field :mobile_number %></div>
+  <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
+    <div>Currently waiting confirmation for: <%= resource.unconfirmed_email %></div>
+  <% end %>
+
+  <div><%= f.label :password %> <i>(leave blank if you don't want to change it)</i><br />
+  <%= f.password_field :password, :autocomplete => "off" %></div>
+
+  <div><%= f.label :password_confirmation %><br />
+  <%= f.password_field :password_confirmation %></div>
+  <br/>
+  <div><%= f.label :current_password %> <i>(we need your current password to confirm your changes)</i><br />
+  <%= f.password_field :current_password %></div>
+
+  <div><%= f.submit "Update" %></div>
+<% end %>
+</div>
+  </div>
+</div>
+</div>
+ 
+<div class="page-header">
+  
+</div>
+
+<div class="container">
+<h5>Cancel my account</h5>
+
+<p>Unhappy? <%= button_to "Cancel my account", registration_path(resource_name), :data => { :confirm => "Terrible things may happen if You cancel your account, you risk loosing all your data" }, :method => :delete %></p>
+
+</div>
+<%= link_to "Back", :back %>

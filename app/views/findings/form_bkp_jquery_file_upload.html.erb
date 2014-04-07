@@ -1,0 +1,288 @@
+<%# @documents = @finding.documents.build %>
+<%= simple_form_for(@finding, html: {class: "form-horizontal", multipart: true,id:"fileupload"}) do |f| %>
+<%= f.error_notification %>
+<% if @finding.errors.any? %>
+    <div class="container" id="error_explanation">
+    <div class="row-fluid">
+    <div class="col-lg-5 col-lg-offset-3">
+    <div class="well well-sm">
+      <p><%= pluralize(@finding.errors.count, "error") %> prohibited this audit from being saved</p>
+      <% @finding.errors.full_messages.each do |msg| %>
+        <p><%= msg %></p>
+      <% end %>
+    </div>
+     
+    </div>
+    </div>
+    </div>
+  <% end %>
+ 
+  
+<div class="container">
+<div class="col-lg-5">
+<ul class="nav nav-tabs">
+  <li><a href="#home" data-toggle="tab">Audit finding</a></li>
+  <li><a href="#profile" data-toggle="tab">CAPA</a></li>
+  <li><a href="#settings" data-toggle="tab">Evidence</a></li>
+  <li><%= f.button :submit, class: "btn btn-success pull-right" %></li>
+</ul>
+
+<!-- Tab panes -->
+<div class="tab-content">
+   <div class="tab-pane active" id="home">
+    
+    
+    <br/>
+    
+    <div class="form-group">
+     <div class="col-xs-12">
+     
+    
+      <%#= f.input :audit_id, collection: Audit.all, label_method: :department_name, label: false %>
+        
+       <%= f.hidden_field :audit_id, :value => params[:audit_id].to_i %>
+      <%= f.input :description, :input_html=>{:rows=>10}, length: 12, :autofocus => true %>
+    
+      
+     </div>
+      </div>
+      
+     <div class="form-group">
+      <div class="col-xs-6">
+      <div class="input-sm">
+      <%= f.input :category, collection: FindingType.all, label_method: :category_name, value_method: :category_name %>
+      </div>
+      </div>
+      
+      <div class="col-xs-6">
+      <div class="input-sm">
+      <%= f.input :risk_rating, collection: Risk.all, label_method: :risk_name, value_method: :risk_name %>
+      </div>
+     
+      </div>
+      
+      </div>
+   
+      <br/>
+     
+      <div class="form-group">
+      <div class="col-xs-9">
+      <div class="input-sm">
+      <%= f.input :status_id, collection: FindingStatus.all, label_method: :status_name, value_method: :status_name %>
+      </div>
+      </div>
+      
+      <div class="col-xs-3">
+      <div class="input-sm">
+      <%= f.input :iso_clause, :label => "Reference" %>
+      </div>
+      </div>
+      </div>
+      
+      
+</div>
+      
+   <div class="tab-pane" id="profile">
+  
+  <br/>
+    
+    <div class="form-input">
+    <div class="col-xs-12">
+    
+     <%= f.input :corrective_action, :input_html=>{:rows=>6} %>
+     <%= f.input :preventive_action, :input_html=>{:rows=>6} %>
+      
+    </div>
+    </div>
+  
+  </div>
+  <div class="tab-pane" id="settings">
+    <br/>
+  
+   <!--  <div class="form-input">
+      <div class="col-xs-12">
+      <div class="input-sm">
+    <%#= f.fields_for :document do |document_fields| %>
+        
+      <%#= document_fields.file_field :attachment,name:"attachment", id:"attachment",onchange:"document.getElementById('moreUploadsLink').style.display = 'block';"%>
+    
+    <%# end %>
+    
+    <ul class= "nav">
+    <li><a href="#"> File 1 </a></li>
+    <li><a href="#"> File 2 </a></li>
+    <li><a href="#"> File 3 </a></li>
+    </ul> -->
+  <% number = 0 %>
+    
+<%= file_field_tag :attachment,name:"attachment", id:"attachment",onchange:"document.getElementById('moreUploadsLink').style.display = 'block';"%>
+<div id="moreUploads"></div>
+<div id="moreUploadsLink" style="display:none;"><a href="javascript:addFileInput();">Attach another File</a></div>
+ 
+<script type="text/javascript">
+var upload_number = 2;
+function addFileInput() {
+ 	var d = document.createElement("div");
+ 	var file = document.createElement("input");
+ 	file.setAttribute("type", "file");
+ 	file.setAttribute("name", "attachment"+upload_number);
+ 	d.appendChild(file);
+ 	document.getElementById("moreUploads").appendChild(d);
+ 	upload_number++;
+}
+</script>
+
+
+  <%#= f.submit %>
+   
+
+
+  <%#= f.file_field :avatar %>
+      
+     </div>
+    </div>
+    </div>
+      
+       <div class="row fileupload-buttonbar">
+      <div class="span7">
+        <!-- The fileinput-button span is used to style the file input field as button -->
+        <span class="btn btn-success fileinput-button">
+          <i class="icon-plus icon-white"></i>
+          <span>Add files...</span>
+          <%= file_field_tag :attachment %>
+       
+        </span>
+        <button type="submit" class="btn btn-primary start">
+          <i class="icon-upload icon-white"></i>
+          <span>Start upload</span>
+        </button>
+        <button type="reset" class="btn btn-warning cancel">
+          <i class="icon-ban-circle icon-white"></i>
+          <span>Cancel upload</span>
+        </button>
+        <button type="button" class="btn btn-danger delete">
+          <i class="icon-trash icon-white"></i>
+          <span>Delete</span>
+        </button>
+        <input type="checkbox" class="toggle">
+      </div>
+      <div class="span5">
+        <!-- The global progress bar -->
+        <div class="progress progress-success progress-striped active fade">
+          <div class="bar" style="width:0%;"></div>
+        </div>
+      </div>
+    </div>
+    <!-- The loading indicator is shown during image processing -->
+    <div class="fileupload-loading"></div>
+    <br>
+    <!-- The table listing the files available for upload download -->
+    <table class="table table-striped"><tbody class="files" data-toggle="modal-gallery" data-target="#modal-gallery"></tbody>
+    </table>
+  
+
+
+   <script>
+  var fileUploadErrors = {
+  maxFileSize: 'File is too big',
+  minFileSize: 'File is too small',
+  acceptFileTypes: 'Filetype not allowed',
+  maxNumberOfFiles: 'Max number of files exceeded',
+  uploadedBytes: 'Uploaded bytes exceed file size',
+  emptyResult: 'Empty file upload result'
+  };
+</script>
+
+<!-- The template to display files available for upload -->
+<script id="template-upload" type="text/x-tmpl">
+  {% for (var i=0, file; file=o.files[i]; i++) { %}
+  <tr class="template-upload fade">
+    <td class="preview"><span class="fade"></span></td>
+    <td class="name"><span>{%=file.name%}</span></td>
+    <td class="size"><span>{%=o.formatFileSize(file.size)%}</span></td>
+    {% if (file.error) { %}
+    <td class="error" colspan="2"><span class="label label-important">{%=locale.fileupload.error%}</span> {%=locale.fileupload.errors[file.error] || file.error%}</td>
+    {% } else if (o.files.valid && !i) { %}
+    <td>
+      <div class="progress progress-success progress-striped active"><div class="bar" style="width:0%;"></div></div>
+    </td>
+    <td class="start">{% if (!o.options.autoUpload) { %}
+      <button class="btn btn-primary">
+        <i class="icon-upload icon-white"></i>
+        <span>{%=locale.fileupload.start%}</span>
+      </button>
+      {% } %}</td>
+    {% } else { %}
+    <td colspan="2"></td>
+    {% } %}
+    <td class="cancel">{% if (!i) { %}
+      <button class="btn btn-warning">
+        <i class="icon-ban-circle icon-white"></i>
+        <span>{%=locale.fileupload.cancel%}</span>
+      </button>
+      {% } %}</td>
+  </tr>
+  {% } %}
+</script>
+<!-- The template to display files available for download -->
+<script id="template-download" type="text/x-tmpl">
+  {% for (var i=0, file; file=o.files[i]; i++) { %}
+    <tr class="template-download fade">
+      {% if (file.error) { %}
+        <td></td>
+        <td class="name"><span>{%=file.name%}</span></td>
+        <td class="size"><span>{%=o.formatFileSize(file.size)%}</span></td>
+        <td class="error" colspan="2"><span class="label label-important">{%=locale.fileupload.error%}</span> {%=locale.fileupload.errors[file.error] || file.error%}</td>
+        {% } else { %}
+        <td class="preview">{% if (file.thumbnail_url) { %}
+          <a href="{%=file.url%}" title="{%=file.name%}" rel="gallery" download="{%=file.name%}"><img src="{%=file.thumbnail_url%}"></a>
+          {% } %}</td>
+        <td class="name">
+          <a href="{%=file.url%}" title="{%=file.name%}" rel="{%=file.thumbnail_url&&'gallery'%}" download="{%=file.name%}">{%=file.name%}</a>
+        </td>
+        <td class="size"><span>{%=o.formatFileSize(file.size)%}</span></td>
+        <td colspan="2"></td>
+        {% } %}
+      <td class="delete">
+        <button class="btn btn-danger" data-type="{%=file.delete_type%}" data-url="{%=file.delete_url%}">
+          <i class="icon-trash icon-white"></i>
+          <span>{%=locale.fileupload.destroy%}</span>
+        </button>
+        <input type="checkbox" name="delete" value="1">
+      </td>
+    </tr>
+    {% } %}
+</script>
+
+<script type="text/javascript">
+  $(function () {
+      // Initialize the jQuery File Upload widget:
+      $('#fileupload').fileupload();
+      //
+      // Load existing files:
+      $.getJSON($('#fileupload').prop('action'), function (files) {
+        var fu = $('#fileupload').data('blueimpFileupload'),
+          template;
+        fu._adjustMaxNumberOfFiles(-files.length);
+        console.log(files);
+        template = fu._renderDownload(files)
+          .appendTo($('#fileupload .files'));
+        // Force reflow:
+        fu._reflow = fu._transition && template.length &&
+          template[0].offsetWidth;
+        template.addClass('in');
+        $('#loading').remove();
+      });
+
+  });
+</script>
+  </div>
+</div>
+
+
+</div> 
+</div>
+
+        
+      
+<% end %>

@@ -1,0 +1,45 @@
+<h4>
+  Dear <%= audit.auditee_name %> 
+</h4>
+<p>Corrective and Preventive action is not yet submitted for following findings raised by <auditor.name>. Request to please submit the CAPA so that these findings are closed. In case you need any clarification please write to <%= @audit.auditor_email %> </p>
+<% if @audit.findings != [] %>  
+  <table style="border:1px solid black;">
+    <tr>
+      <th>Finding ID</th>
+      <th>Finding description</th>
+      <th>Raised on</th>
+      <th>Tentative closure date</th>
+      <th>Risk rating</th>
+    </tr>
+    <% @audit.findings.each do |finding|%>
+      <% if finding.status_id == "CAPA Pending" || finding.status_id == ""%>
+        <tr>
+          <td><%= finding.id %></td>
+          <td><%= finding.description %></td>
+          <td><%= finding.created_at.strftime("%d-%m-%y") %></td>
+          <td><%= finding.closure_date.strftime("%d-%m-%y") %></td>
+          <td><%= finding.risk_rating %></td>
+       </tr>
+    <%end%>
+   <%end%> 
+    </table>
+  <%else %>
+    <div><b>"There are no findings for CAPA Pending" </b></div>
+  <%end%>
+
+<div>
+  <p>Thanks,</p>
+  <p><%= @user.profile_name%></p>
+  <p><%= @user.email%></p>
+</div>
+
+
+
+
+
+
+
+
+
+
+

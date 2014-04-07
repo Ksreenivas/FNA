@@ -1,0 +1,208 @@
+   
+   
+   <div class="container">
+    <div class="row-fluid">
+    <div class="col-lg-12 col-lg-offset-1">
+    <%= link_to 'New Audit', new_audit_path, class: "btn btn-default btn-sm" %>
+   <!-- <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#myModal" > Import Findings (Coming Soon) </button>-->
+
+      
+     <button class="btn btn-info btn-sm" data-toggle="modal" data-target="#myModal1"> Preview Schedule </button>
+    
+    </div>
+    </div>
+    </div>
+     <br/>
+   <% @audits.each do |audit| %>
+   <div class="container">
+   <div class="row-fluid">
+   <div class="col-lg-6 col-md-6 col-lg-offset-1">
+   
+    <small>
+      <div class="panel panel-default" >
+      <% audit.findings.each do |finding| %>  
+        <%if finding.status_id != "Closed"%>
+          <% break %>
+        <%end %>  
+      <% end  %>
+      <%#= (audit.start_date..audit.end_date).cover?(Time.now)%>
+      
+          <div class="panel-heading" style="background:#ecf0f1">
+              <span class="label label-default">Audit   # <%= audit.id %></span> | <strong style="font-size:14px;"><%= audit.department_name %></strong>
+                
+                <span class="label label-success pull-right">
+               <%if (audit.start_date.to_i..audit.end_date.to_i).include?(Time.now.to_i) %>
+          
+            <%= "In Progress" %> 
+            <%elsif audit.start_date.to_i > Time.now.to_i %>
+              <%= "Not Started"%>
+            <%elsif Time.now.to_i > audit.end_date.to_i   %>  
+              <%= "Audit Completed" %>
+          <%end%> 
+      </span>
+      </div>
+      <div class="panel-body" style="background:#ecf0f1">
+        <strong>Auditor: </strong> <%= audit.auditor_name %> | <strong>Auditee: </strong><%= audit.auditee_name %>
+      </div>
+
+            <div class="panel-footer" style="background:#ecf0f1">  
+                    <div class="meta">
+                   <p>
+                   <%= time_ago_in_words(audit.created_at) + " ago" %>    |
+
+                     <% if audit.start_date.to_i > Time.now.to_i %>
+                     <%= link_to " Modify", edit_audit_path(audit), class: "btn" %>  | 
+                     <i class="fa fa-trash-o fa-lg"></i> <%= link_to " Delete", audit, class: "btn", method: :delete, data: { Confirm: "Are you sure"} %> |
+                      <%= link_to " View Finding", audit, class: "btn btn-link btn-sm disabled" %>
+                    <i class="fa fa-share-square-o fa-lg"></i>
+                      <%= link_to " Add Finding", new_audit_finding_path(audit.id), class: "btn btn-primary btn-sm pull-right disabled" %>  
+                    <% else %>  
+                     <%= link_to " Modify", edit_audit_path(audit), class: "btn disabled" %>  |
+                     <i class="fa fa-trash-o fa-lg"></i> <%= link_to " Delete", audit, class: "btn disabled", method: :delete, data: { Confirm: "Are you sure"} %> |
+                      <%= link_to " View Finding", audit, class: "btn btn-link btn-sm" %>
+                    <i class="fa fa-share-square-o fa-lg"></i>
+                      <%= link_to " Add Finding", new_audit_finding_path(audit.id), class: "btn btn-default btn-sm pull-right" %>  
+                    <%end%>  
+                     </p>
+                         
+                     </div>
+                     </div>
+               </div> 
+    <div class="page-header"></div>
+        </div>
+
+
+    </small>
+
+ </div>
+
+ </div>
+
+ </div>
+    <% end %>
+   
+<div class="container">
+    <div class="row-fluid"> 
+    <div class="col-lg-12 col-lg-offset-1">
+    <%= will_paginate @audits %>
+    </div>
+    </div>
+    </div>
+
+
+
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">Upload findings to audits</h4>
+      </div>
+      <div class="modal-body">
+     <form class="form-horizontal" role="form">
+     <div class="form-group">
+        <div class="col-sm-8">
+            <select class="form-control">
+            <option>Select Audit</option>
+            <option>2</option>
+            <option>3</option>
+            <option>4</option>
+            <option>5</option>
+            </select>
+       </div>
+       <br/><br/><br/>
+        
+        <div class="col-sm-8">
+        
+        <button type="button" class="btn btn-info btn-block">Download template</button>
+        </div>
+      <br/><br/><br/>
+         <div class="col-sm-8">
+
+        <button type="button" class="btn btn-success btn-block">Import</button>
+        </div>
+         <br/><br/><br/>
+        <div class="col-sm-12">
+       
+       <ul>
+           <li> Upload finding in provided template only</li>
+           <li> Avoid blank rows and duplicate import</li>
+           <li> File import will only accept "Critical, High, Medium and Low" risk categories. Finding will skip if incorrect risk category is entered</li>
+           <li> Ensure audits do not contain any findings before an import is made </li>
+           <li> Finding import can be used only once. Import will only perform "add finding" action</li>
+           <li> To modify a finding , an user must visit the finding in application</li>
+           
+       </ul>
+        </div>
+ 
+     </div>
+    
+     </form>
+      </div>
+      <div class="modal-footer">
+        
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<%= simple_form_for("", :url => url_for(:controller => 'audits', :action => 'share_schedule')) do |f| %>
+<div class="modal fade" id="myModal1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">Preview and Share audit schedule</h4>
+      </div>
+      <div class="modal-body">
+       
+
+        <small>
+      <table class="table table-hover table-responsive table-condensed">
+            <thead>
+		
+            <tr style="background:#ecf0f1">
+		        <th> Audit ID</th>
+		        <th>Department</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+            <th>Auditor</th>
+            <th>Auditee</th>
+            <th>Location</th>
+ 	          </tr>
+            </thead>
+        
+        <tbody>
+          <% @audits_not_started.each do |audit| %>
+        <tr>
+		    <td> <%= audit.id %> </td>
+        <td><%= audit.department_name %></td>
+        
+        <td><%= audit.start_date.strftime("%d-%m-%y")%></td>
+        <td><%= audit.end_date.strftime("%d-%m-%y")%></td>
+		    <td><%= audit.auditor_name%></td>
+        <td><%= audit.auditee_name%></td>
+        <td><%= audit.location%></td>
+        </tr>
+        <%end%>
+	    
+        </tbody>
+       
+        
+      </table>
+          
+      </small>
+        <%= f.text_field :email, :class => 'form-control',:id=>"inputEmail3",:placeholder=>"Email address, seperate by comma to enter multiple email address" %>
+      </div>
+      
+      
+      <div class="modal-footer">
+          <%= f.button :submit,"Share", :class => 'btn btn-primary' %>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<% end %>
+

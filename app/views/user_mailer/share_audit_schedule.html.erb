@@ -1,0 +1,35 @@
+<h4>
+  <%= @user.profile_name %>  has sent you an audit schedule. If you wish to communicate any modifications please write to <%= @user.email %> 
+</h4>
+
+<% if @audits != [] %>  
+  <table style="border:1px solid black;">
+    <tr>
+      <th>Audit Id</th>
+      <th>Department</th>
+      <th>Starts Date</th>
+      <th>End Date</th>
+      <th>Auditor</th>
+      <th>Auditee</th>
+      <th>Location</th>
+    </tr>
+    <% @audits.each do |audit|%>
+    <tr>
+      <td><%= audit.id %></td>
+      <td><%= audit.department_name %></td>
+      <td><%= audit.start_date.strftime("%d-%m-%y") %></td>
+      <td><%= audit.end_date.strftime("%d-%m-%y") %></td>
+      <td><%= audit.auditor_name %></td>
+      <td><%= audit.auditee_name %></td>
+      <td><%= audit.location %></td>
+     </tr>
+   <%end%> 
+    </table>
+  <%else %>
+    <div><b>"There are no audits scheduled" </b></div>
+  <%end%>
+
+<div>
+  <p>From</p>
+  <p>77 sreenivas </p>
+</div>

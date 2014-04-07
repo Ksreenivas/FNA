@@ -1,0 +1,382 @@
+ <script type="text/javascript" src="//www.google.com/jsapi"></script>
+    <script type="text/javascript">
+      google.load('visualization', '1', {packages: ['corechart']});
+    </script>
+
+<div class="container">
+  
+    <div class="row-fluid">
+      <div class="col-lg-2" style="margin-left:30px">
+           <small>
+           <div class="panel panel-default" >
+         <div class="panel-heading" style="background:#1abc9c;">
+           <strong> All Audits </strong>
+         </div>
+          <div class="panel-body" style="background:#ecf0f1;">
+           <span class="col-lg-offset-4">
+                  <%= @current_user.audits.count %>
+            </span>
+          </div>
+        </div>
+             </small>
+      </div>
+       
+        <div class="col-lg-2">
+           <small>
+           <div class="panel panel-default">
+         <div class="panel-heading" style="background:#1abc9c;">
+           <strong> My Audits </strong>
+         </div>
+          <div class="panel-body" style="background:#ecf0f1;">
+           <span class="col-lg-offset-4">
+                  <%= @audits.count %>
+            </span>
+          </div>
+        </div>
+             </small>
+      </div>
+      
+      <div class="col-lg-2">
+           <small>
+           <div class="panel panel-default">
+         <div class="panel-heading" style="background:#1abc9c;">
+           <strong>Findings issued by me</strong>
+         </div>
+          <div class="panel-body" style="background:#ecf0f1;">
+           <span class="col-lg-offset-4">
+           
+             <%= @finding_count %>
+            </span>
+          </div>
+        </div>
+             </small>
+      </div>
+          
+       
+      
+      <div class="col-lg-3">
+           <small>
+           <div class="panel panel-default">
+         <div class="panel-heading" style="background:#1abc9c;">
+         Open Audits (+30 days)
+         </div>
+          <div class="panel-body" style="background:#ecf0f1;">
+           <span class="col-lg-offset-6">
+           <a href class="btn-link" data-toggle="modal" data-target="#openaudits">
+           <%= @open_audits_count %></a>
+            </span>
+          </div>
+        </div>
+             </small>
+      </div>
+      
+       <div class="col-lg-2">
+           <small>
+           <div class="panel panel-default">
+         <div class="panel-heading" style="background:#1abc9c;">
+         Upcoming Audits
+         </div>
+          <div class="panel-body" style="background:#ecf0f1;">
+           <span class="col-lg-offset-6">
+           <a href class="btn-link" data-toggle="modal" data-target="#upcomingaudits">
+           <%= @upcoming_audits.count %></a>
+            </span>
+          </div>
+        </div>
+             </small>
+      </div>
+      
+  </div>
+</div>
+  <div class="page-header"></div>
+<div class="container">
+  <div class="row-fluid">
+    <div class="col-lg-12 col-md-12">
+     <div id="visualization" style="width: 1000px; height: 300px;"></div> 
+    </div>
+  
+  </div>
+  </div>
+  <div class="page-header"></div>
+  <div class="container">
+  <div class="row-fluid">
+    <div class="col-lg-6 col-md-6">
+     <div id="pie-visualization" style="width: 500px; height: 300px;"></div> 
+    </div>
+    <br/><br/>
+    <div class="col-lg-5 col-md-5">
+   <small>
+     <div class="panel panel-default">
+       <div class="panel-heading">
+         CAPA Pending
+       </div>
+       <div class="panel-body">
+         <%#=  collection_select(:capa_pending_audits, :id,@capa_pending_audits, :id,:id, {},{:class=>'form-control'})   %>
+         <%= select_tag "audits[id]", options_for_select(@capa_pending_audits.map { |obj| [obj['id'], obj['id']] }),:class=>'form-control' %>
+         <% capa_pending_findings = []%> 
+         <% if @capa_pending_audits != [] %>
+           <% @capa_pending_audits.first.findings.each do |finding| %>
+                 <% if finding.status_id == "CAPA Pending" || finding.status_id == "" %>    
+                     <% capa_pending_findings << finding %>
+                 <% end %>
+           <% end %>
+          <%end%> 
+         <span class="col-lg-offset-6">
+           <h3>  <a href="#" class="btn-link" data-toggle="modal"  data-target="#capapending" id="capa_pending_status"><%= capa_pending_findings.count %>  CAPA yet to be submitted </a></h3>
+           
+            </span>
+          </div>
+        </div>
+             </small> 
+    </div>
+    
+  </div>
+</div>                                                                           
+     
+<div class="modal fade" id="openaudits" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">Open Audits (Greater than 30 days)</h4>
+      </div>
+      <div class="modal-body">
+        <table class="table table-hover table-responsive">
+        <thead>
+		
+            <tr style="background:#ecf0f1">
+		    <th> Audit ID</th>
+		    <th>Department name</th>
+            <th>Created Date</th>
+            <th>Auditor</th>
+            <th>Ageing</th>
+ 	        </tr>
+        </thead>
+        
+        <tbody>
+        <% @open_audits.each do |audit| %>
+        <tr>
+          <td><%= audit.id %> </td>
+          <td><%= audit.department_name %></td>
+          <td><%= audit.created_at.strftime("%d-%m-%y") %></td>
+          <td><%= audit.auditor_name %></td>
+          <td><%= (Time.now.to_date - finding.created_at.to_date).to_i %></td>
+        </tr>
+        <%end%>
+	    
+        </tbody>
+      </table>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+<div class="modal fade" id="upcomingaudits" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">Upcoming audits</h4>
+      </div>
+      <div class="modal-body">
+        <table class="table table-hover table-responsive">
+        <thead>
+		
+            <tr style="background:#ecf0f1">
+		    <th> Audit ID</th>
+		    <th>Department name</th>
+            <th>Created Date</th>
+            <th>Auditor</th>
+            <th>Begins on</th>
+ 	        </tr>
+        </thead>
+        
+        <tbody>
+        <% @upcoming_audits.each do |audit| %>
+          <tr>
+          <td><%= audit.id %> </td>
+          <td><%= audit.department_name %></td>
+          <td><%= audit.created_at.strftime("%d-%m-%y") %></td>
+          <td><%= audit.auditor_name %></td>
+          <td><%= audit.start_date.strftime("%d-%m-%y") %></td>
+          </tr>
+        <%end%>
+	    
+        </tbody>
+      </table>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+       
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<div class="modal fade" id="capapending" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">CAPA pending</h4>
+      </div>
+      <div class="modal-body">
+        <table class="table table-hover table-responsive" >
+        <thead>
+		
+            <tr style="background:#ecf0f1">
+		    <th> Finding ID</th>
+		    <th>Description</th>
+             <th>Created date</th>
+            <th>Tentative closure date</th>
+ 	        </tr>
+        </thead>
+        
+        <tbody id="pending_findings"  >
+       
+	    
+        </tbody>
+      </table>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-info">Follow up with auditee</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+       
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<script type="text/javascript">
+  
+  $(document).ready(function () {
+   $("#audits_id").on("change", function () {
+     //   alert("script called on change");
+     //$("#capa_pending_status").innerHtml = "text changed due to script called";
+       var audit_id = $(this).val();
+       $.ajax({
+        type: "POST",
+        dataType: "json",
+         url: "dashboards/capa_pending_audits?audit_id="+audit_id,
+        success: function(data){
+              
+       document.getElementById('capa_pending_status').innerHTML = data.length + "  CAPA yet to be submitted" ;
+      },
+    error: function(){
+      document.getElementById('capa_pending_status').innerHTML = "CAPA Missing Error" ;
+  }
+    }); 
+
+     
+     //if ($(this).val() === "opel") {
+     //    $("#myHiddenField").val($(this).val());
+     //    $(this).attr("disabled", "disabled");
+     // }
+   });
+  });
+  //capa_pending_audits_id
+      function drawVisualization() {
+        // Create and populate the data table.
+        //   alert("<%= current_user.audits %>")
+        //var dataTable = new google.visualization.DataTable();
+        months = ['Jan','Feb', 'Mar','Apr','May','Jun','Jul','Aug','Sep','Oct', 'Nov','Dec']
+        //var newData = [['Month', 'Open', 'In Progress' , 'Closed'],
+        //   ['2004',  1000,      400     ,  232   ],
+        //   ['2005',  1170,      460    ,  421   ],
+        //   ['2006',  660,       1120    ,  4324  ],
+        //   ['2007',  1030,      540     ,  4234  ],
+        //   ['2008',  1530,      50     ,    234  ]];
+        
+          // determine the number of rows and columns.
+        // var numRows = newData.length;
+        //alert("number of rows"+ numRows );
+        //  var numCols = newData[0].length;
+        //alert("number of cols"+ numCols );
+          // in this case the first column is of type 'string'.
+        //  dataTable.addColumn('string', newData[0][0]);
+        
+          // all other columns are of type 'number'.
+        //for (var i = 1; i < numCols; i++)
+        //   dataTable.addColumn('number', newData[0][i]);           
+        
+          // now add the rows.
+        // for (var i = 1; i < numRows; i++) 
+        //  dataTable.addRow(newData[i]);     
+        // Create and draw the visualization.
+        var dataTable = new google.visualization.DataTable();
+        dataTable.addColumn('string', 'Month')
+        dataTable.addColumn('number', 'Open')
+        dataTable.addColumn('number', 'In Progress')
+        dataTable.addColumn('number', 'Closed')
+        for (var i = 0; i < months.length; i++) 
+            dataTable.addRows([[months[i],<%= @open_audits.count %>,<%= @in_progress_audits.count %>,<%= @open_audits.count %>]]);  
+        
+        new google.visualization.ColumnChart(document.getElementById('visualization')).
+            draw(dataTable,
+                 {title:"Monthly Audit Status",
+                  width:1000, height:300,
+                  
+                  hAxis: {title: "Month"}}
+            );
+      }
+      
+
+      function drawPieVisualization() {
+           var data = google.visualization.arrayToDataTable([
+          ['Findings', 'Months'],
+          ['CAPA Pending',    <%= @findings_capa_pending.count%>],
+         ['Under Review',     <%= @findings_under_review.count%> ],
+          ['Closed',  <%= @findings_closed.count%>],
+         ]);
+
+         var options = {
+          title: 'Overall finding status'
+         
+        };
+       
+
+        var chart = new google.visualization.PieChart(document.getElementById('pie-visualization'));
+        chart.draw(data, options);
+      }
+
+  
+  
+      google.setOnLoadCallback(drawVisualization);
+      google.setOnLoadCallback(drawPieVisualization);
+    </script>
+<script type"text/javascript">
+  $(document).ready(function() {
+
+  $('#capa_pending_status').click(function () {
+
+    var data_id = '';
+    var audit_id = $('[name="audits[id]"] option:selected').val();
+
+    $('#pending_findings').empty();
+     $.ajax({
+        type: "POST",
+        dataType: "json",
+        url: "dashboards/capa_pending_audits?audit_id="+audit_id,
+      success: function(data){
+         $.each(data, function(i, item) {
+           $('<tr>').html("<td>" + data[i]['id'] + "</td><td>" + data[i]['description'] + "</td><td>"+new Date(data[i]['created_at']).toString("dd-MM-yy HH:mm")+"</td><td>"+new Date(data[i]['closure_date']).toString("dd-MM-yy HH:mm")+"</td>")
+           .appendTo('#pending_findings');
+        });
+       
+      },
+    error: function(){
+      //document.getElementById('capapending').innerHTML = "Findings Error" ;
+  }
+    }); 
+   
+  })
+});    
+</script>

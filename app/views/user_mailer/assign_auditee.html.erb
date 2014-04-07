@@ -1,0 +1,18 @@
+<h3>
+  Dear <%= @audit.auditee_name %> </h3>
+<div>
+    <%= @audit.auditor_name %> has been assigned to audit your department on <%= @audit.start_date.strftime("%Y-%m-%d") %> at <%= @audit.start_date.strftime("%H:%M") %>. 
+    <p>The audit ends on <%= @audit.end_date.strftime("%Y-%m-%d") %> at <%= @audit.end_date.strftime("%H:%M")%>. </p>
+</div> 
+<br/>
+<p>You’re presence is requested for this audit.</p>
+<br/>
+<p>Incase you wish to modify the schedule please write to <%= @user.email%></p>
+<p>The audit will be conducted at <%= @audit.location %> </p>
+  <p>If the audit schedule is modified, you will be notified of the change.</p>
+<br/><br/>   
+<div>  
+  <p>Thanks,</p>
+  <p><%= @user.profile_name%></p>
+  <p><%= @user.email%></p>
+</div> 

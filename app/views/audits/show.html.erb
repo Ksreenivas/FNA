@@ -1,0 +1,177 @@
+   
+
+    <div class="container">
+    <div class="row-fluid">
+    <div class="col-lg-9 col-md-9 col-lg-offset-1">
+       <%= link_to "Create Findings", new_audit_finding_path(@audit.id), class: "btn btn-default btn-sm" %> 
+      <%= link_to "Export Findings", "export_findings?audit_id=#{@audit.id}", class: "btn btn-info btn-sm" %>
+      <label class="pull-right"> <input type="checkbox"> Findings submitted        </label>
+     
+    </div>
+        
+    </div>
+    </div>
+    <br/>
+    
+    <div class="container">
+    <div class="row-fluid">
+    <div class="col-lg-10 col-md-10 col-lg-offset-1">
+        
+    
+          <%#=  @audit.findings %>
+          <%= will_paginate @findings %>
+              <% if @audit.findings!= [] %>  
+            
+              <% @findings.each do |finding| %>
+                  <small>
+                  <div class="panel panel-default">
+                       <div class="panel-heading" style="background:#ecf0f1">
+                         
+                          <span class="label label-success"> Finding # <%= finding.id %></span> | <%= finding.audit.department_name %> 
+
+
+                         <% if finding.status_id == "CAPA Pending"  %>
+                        <span class="label label-warning pull-right "> <%= finding.status_id %>  </span>
+                         
+                        <%elsif finding.status_id == "CAPA Submitted" %>    
+                        <span class="label label-success pull-right"> <%= finding.status_id %> </span>
+                  
+                        <%elsif finding.risk_rating == "Closed" %>       
+                        <span class="label label-info pull-right"> <%= finding.status_id %> </span>
+                  
+                        <%else %>        
+                        <span class="label label-primary pull-right"> <%= finding.status_id %> </span>
+                        <%end%>  
+                    </div>
+                    
+                   <div class="panel-body" style="background:#ecf0f1">
+                   <%= finding.description %>
+                   </div>
+                    
+                  <div class="panel-footer" style="background:#ecf0f1">
+                    
+                    <%= link_to time_ago_in_words(finding.created_at) + " ago" , finding %>  |
+                    
+                    <span class="label label-warning"><%= finding.category %></span>         |
+                    
+                   <% if finding.risk_rating == "Critical"  %>
+                   <span class="label label-danger "> 
+                   <%= finding.risk_rating + " risk" %>
+                   </span> 
+                   <%elsif finding.risk_rating == "High" %>    
+                   <span class="label label-warning"> 
+                   <%= finding.risk_rating + " risk" %>
+                   </span>
+                   <%elsif finding.risk_rating == "Medium" %>    
+                   <span class="label label-primary "> 
+                   <%= finding.risk_rating + " risk" %>
+                   </span>
+                   <%elsif finding.risk_rating == "Low" %>        
+                   <span class="label label-info "> 
+                   <%= finding.risk_rating + " risk" %>
+                   </span>
+                   <%elsif finding.risk_rating == "No Risk" %>        
+                   <span class="label label-default "> 
+                   <%= finding.risk_rating + " risk" %>
+                   </span>
+                   <%else %>        
+                   
+                    <span class="label label-primary "> 
+                    <%= finding.risk_rating + " risk" %>
+                    </span> 
+                    <%end%> 
+                    
+                    
+                      
+                   <span class="pull-right">
+                     |
+                     <strong> <a href="#"  data-id="<%= finding.id%>" data-toggle="modal" data-target="#myModal">  CAPA </a></strong>
+                     |
+                     <%#= hidden_field_tag :audit_id , params[:id] %>
+                      <%= link_to 'Modify', edit_finding_path(finding,:audit_id => params[:id]) %> |
+                   <%= link_to 'Destroy', finding_path(finding,:audit_id => params[:id]), method: :delete, data: { confirm: 'This action is permanent, are you sure?' } %>
+                   </span>
+                    
+                    <br/><br/>
+                    <p><% finding.documents.each do |document| %> <label class="badge">
+                        <%= link_to document.attachment_file_name, document.attachment.url %>
+                      </label> <%end%>  
+                     
+                  </div>  
+                      
+                  </div>
+                    <div class="page-header"></div>
+             </small>
+               
+             <% end %> 
+             <% else %>
+                    
+                <div class="panel panel-default">
+                <div class="panel-heading">
+                 No findings. <%# = link_to " Create Finding", new_audit_finding_path(@audit.id), class: "btn btn-success btn-sm pull-right" %>
+                
+                </div>
+               
+
+        <%end%>
+    
+    
+    </div>
+    </div>
+    </div>
+      <div class="container">
+<div class="col-lg-10 col-md-10 col-lg-offset-1">
+    <div class="alert alert-warning fade in">
+    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+    <strong>Need your attention!</strong> Follow-up alerts will stop the moment you select "Findings submitted"
+    </div>  
+    </div>
+        </div>
+      
+      
+   <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">Corrective and Preventive Action </h4>
+      </div>
+      <div class="modal-body">
+       <!-- <input type="label" name="finding" id="finding" value="" /> -->
+        <label id="finding"></label>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>   
+ <script type"text/javascript">
+  $(document).ready(function() {
+
+  $('a[data-toggle=modal], button[data-toggle=modal]').click(function () {
+
+    var data_id = '';
+  
+    if (typeof $(this).data('id') !== 'undefined') {
+  
+      data_id = $(this).data('id');
+      //alert(data_id);
+    }
+    $.ajax({
+        type: "POST",
+        dataType: "json",
+        url: "find_capa?finding_id="+data_id,
+      success: function(data){
+       document.getElementById('finding').innerHTML = data ;
+      },
+    error: function(){
+      document.getElementById('finding').innerHTML = "CAPA Missing Error" ;
+  }
+    }); 
+   
+  })
+});    
+</script>
+
