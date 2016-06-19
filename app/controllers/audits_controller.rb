@@ -3,6 +3,8 @@ class AuditsController < ApplicationController
      before_filter :check_audit_status, :only => [:edit,:update]
       require 'prawn'
   # GET /audits
+  # testing for jenkins build commit 
+  # changes 
   # GET /audits.json
   def index
     @audits_not_started = current_user.audits.where('start_date > ?',Time.now)      
